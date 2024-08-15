@@ -53,7 +53,7 @@ namespace UtilPlugin
         public bool cover;
         public override string ToString()
         {
-            return $"text:{text}, color:{color}, adminrank: {adminrank}";
+            return $"称号:{text}, 颜色:{color}, 权限组: {adminrank}";
         }
     }
 }

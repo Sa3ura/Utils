@@ -36,8 +36,8 @@ namespace UtilPlugin
             Timing.KillCoroutines(votingcoroutine);
             if (voting)
             {
-                BroadcastMain.SendGlobalcast(new BroadcastItem { priority = (byte)BroadcastPriority.Higher, time = 5, prefix = "<color=red>投票失败</color>", text = "回合已结束" });
-                //PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>回合已结束</size>", 5, Broadcast.BroadcastFlags.Normal, true);
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Priority = (byte)BroadcastPriority.Higher, Time = 5, Prefix = "<color=red>投票失败</color>", Text = "回合已结束" });
+                PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>回合已结束</size>", 5, Broadcast.BroadcastFlags.Normal, true);
                 voting = false;
             }
         }
@@ -47,8 +47,8 @@ namespace UtilPlugin
             if (voting)
             {
                 Timing.KillCoroutines(votingcoroutine);
-                BroadcastMain.SendGlobalcast(new BroadcastItem { priority = (byte)BroadcastPriority.Higher, time = 5, prefix = "<color=red>投票失败</color>", text = "管理员强制废除了此次投票" });
-                //PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>管理员强制废除了此次投票</size>", 5, Broadcast.BroadcastFlags.Normal, true);
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Priority = (byte)BroadcastPriority.Higher, Time = 5, Prefix = "<color=red>投票失败</color>", Text = "管理员强制废除了此次投票" });
+                PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>管理员强制废除了此次投票</size>", 5, Broadcast.BroadcastFlags.Normal, true);
                 AcceptPlayer = new ConcurrentBag<string>();
                 AgainstPlayer = new ConcurrentBag<string>();
                 Timing.CallDelayed(90f, () => Canvote = true);
@@ -70,13 +70,13 @@ namespace UtilPlugin
             if (votingEvent.OnVotingEnded() || Accepted)
             {
                 votingEvent.Action();
-                BroadcastMain.SendGlobalcast(new BroadcastItem { priority = (byte)BroadcastPriority.Higher, time = 5, prefix = "<color=green>投票通过</color>", text = $"{votingEvent.AcceptBroadcast}" });
-                //PluginAPI.Core.Server.SendBroadcast($"<size=24><color=green>「投票通过」</color>{votingEvent.AcceptBroadcast}</size>", 5, Broadcast.BroadcastFlags.Normal);
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Priority = (byte)BroadcastPriority.Higher, Time = 5, Prefix = "<color=green>投票通过</color>", Text = $"{votingEvent.AcceptBroadcast}" });
+                PluginAPI.Core.Server.SendBroadcast($"<size=24><color=green>「投票通过」</color>{votingEvent.AcceptBroadcast}</size>", 5, Broadcast.BroadcastFlags.Normal);
             }
             else
             {
-                BroadcastMain.SendGlobalcast(new BroadcastItem { priority = (byte)BroadcastPriority.Higher, time = 5, prefix = "<color=red>投票失败</color>", text = $"没有足够玩家投票" });
-                //PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>没有足够玩家投票</size>", 5, Broadcast.BroadcastFlags.Normal, true);
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Priority = (byte)BroadcastPriority.Higher, Time = 5, Prefix = "<color=red>投票失败</color>", Text = $"没有足够玩家投票" });
+                PluginAPI.Core.Server.SendBroadcast($"<size=24><color=red>「投票失败」</color>没有足够玩家投票</size>", 5, Broadcast.BroadcastFlags.Normal, true);
             }
             Accepted = false;
             AcceptPlayer = new ConcurrentBag<string>();
@@ -139,8 +139,8 @@ namespace UtilPlugin
             while (time != 0)
             {
                 time--;
-                BroadcastMain.SendGlobalcast(new BroadcastItem { prefix = "<color=yellow>投票</color>", priority = (byte)BroadcastPriority.Higher, time = 1, text = $"{player.Nickname}: 发起<color=yellow>{votingEvent.VotingDes}</color>的投票，使用.v ty同意，.v fd反对(<color=green>{AcceptPlayer.Count}</color>|<color=red>{AgainstPlayer.Count}</color>)({(int)((double)AcceptPlayer.Count / (Server.PlayerCount) * 100)}%)[{time}]" }); 
-                //PluginAPI.Core.Server.SendBroadcast($"<size=28>{player.Nickname}: 发起<color=yellow>{votingEvent.VotingDes}</color>的投票，使用.v ty同意，.v fd反对(<color=green>{AcceptPlayer.Count}</color>|<color=red>{AgainstPlayer.Count}</color>)({(int)((double)AcceptPlayer.Count / (Server.PlayerCount) * 100)}%)[{time}]</size>", 1, Broadcast.BroadcastFlags.Normal, true);
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Prefix = "<color=yellow>投票</color>", Priority = (byte)BroadcastPriority.Higher, Time = 1, Text = $"{player.Nickname}: 发起<color=yellow>{votingEvent.VotingDes}</color>的投票，使用.v ty同意，.v fd反对(<color=green>{AcceptPlayer.Count}</color>|<color=red>{AgainstPlayer.Count}</color>)({(int)((double)AcceptPlayer.Count / (Server.PlayerCount) * 100)}%)[{time}]" }); 
+                PluginAPI.Core.Server.SendBroadcast($"<size=28>{player.Nickname}: 发起<color=yellow>{votingEvent.VotingDes}</color>的投票，使用.v ty同意，.v fd反对(<color=green>{AcceptPlayer.Count}</color>|<color=red>{AgainstPlayer.Count}</color>)({(int)((double)AcceptPlayer.Count / (Server.PlayerCount) * 100)}%)[{time}]</size>", 1, Broadcast.BroadcastFlags.Normal, true);
                 yield return Timing.WaitForSeconds(1f);
             }
             OnVotingEnded(votingEvent);

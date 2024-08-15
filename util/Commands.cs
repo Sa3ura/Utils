@@ -3,7 +3,9 @@ using Exiled.API.Features;
 using InventorySystem;
 using MEC;
 using PlayerRoles;
+using PluginAPI.Roles;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UtilPlugin;
 using VoiceChat;
@@ -11,13 +13,13 @@ using VoiceChat;
 namespace CommandSystem
 {
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class Killme : ICommand
+    public class suicide : ICommand
     {
         public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "防卡死指令";
+        public string Description => "自杀";
 
-        string ICommand.Command => "killme";
+        string ICommand.Command => "suicide";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -34,7 +36,7 @@ namespace CommandSystem
                 player.Teleport(pos);
                 if (arguments.Count == 0)
                 {
-                    player.Kill(Exiled.API.Enums.DamageType.Falldown);
+                    player.Kill("以一种轻松的方式解脱");
                 }
                 else
                 {
@@ -56,13 +58,13 @@ namespace CommandSystem
 
         public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "change badge";
+        public string Description => "更改标签";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (arguments.Count == 0)
             {
-                response = "at least 1 arguments";
+                response = "至少输入一个字符";
                 return false;
             }
             Player player = Player.Get((sender as CommandSender).SenderId);
@@ -106,9 +108,9 @@ namespace CommandSystem
     {
         public string Command => "stopautoclean";
 
-        public string[] Aliases => new string[] {"sc"};
+        public string[] Aliases => new string[] { "stopclean" };
 
-        public string Description => "停止自动清理";
+        public string Description => "停止清理";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -147,65 +149,65 @@ namespace CommandSystem
     [CommandHandler(typeof(ClientCommandHandler))]
     public class UtilInfo : ICommand
     {
-        public string Command => "utilplugininfo";
+        public string Command => "plugininfo";
 
-        public string[] Aliases => new string[] { "utilinfo", "uinfo" };
+        public string[] Aliases => new string[] { "uinfo" };
 
-        public string Description => "UtilPlugin插件相关";
+        public string Description => "插件相关信息";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = "Copyright (C) 2023 Silver Wolf,All Rights Reserved.\n仓库地址: https://github.com/dargoncat/UtilPlugin";
+            response = "Copyright (C) 2023 Silver Wolf,All Rights Reserved.\nEdited By Sa3ura";
             return true;
         }
     }
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class StartRainbow : ICommand
-    {
-        public string Command => "startrainbow";
+    //public class StartRainbow : ICommand
+    //{
+    //    public string Command => "startrainbow";
 
-        public string[] Aliases => Array.Empty<string>();
+    //    public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "startrainbow";
+    //    public string Description => "startrainbow";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            UtilPlugin.RainbowTag.RegisterPlayer(Player.Get((sender as CommandSender).SenderId));
-            response = "Done!";
-            return true;
-        }
-    }
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class StopRainbow : ICommand
-    {
-        public string Command => "stoprainbow";
+    //    public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+    //    {
+    //        UtilPlugin.RainbowTag.RegisterPlayer(Player.Get((sender as CommandSender).SenderId));
+    //        response = "Done!";
+    //        return true;
+    //    }
+    //}
+    //[CommandHandler(typeof(ClientCommandHandler))]
+    //[CommandHandler(typeof(RemoteAdminCommandHandler))]
+    //public class StopRainbow : ICommand
+    //{
+    //    public string Command => "stoprainbow";
 
-        public string[] Aliases => Array.Empty<string>();
+    //    public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "stoprainbow";
+    //    public string Description => "stoprainbow";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            if(UtilPlugin.RainbowTag.UnRegisterPlayer(Player.Get((sender as CommandSender).SenderId)))
-            {
-                response = "Done!";
-                return true;
-            }
-            if (arguments.At(0) == "true")
-            {
-                UtilPlugin.EventHandler.BypassMaxHealth = true;
-            }
-            else
-            {
-                UtilPlugin.EventHandler.BypassMaxHealth = false;
-            }
-            response = "no rainbow";
-            return false;
-        }
-    }
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
+    //    public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+    //    {
+    //        if(UtilPlugin.RainbowTag.UnRegisterPlayer(Player.Get((sender as CommandSender).SenderId)))
+    //        {
+    //            response = "Done!";
+    //            return true;
+    //        }
+    //        if (arguments.At(0) == "true")
+    //        {
+    //            UtilPlugin.EventHandler.BypassMaxHealth = true;
+    //        }
+    //        else
+    //        {
+    //            UtilPlugin.EventHandler.BypassMaxHealth = false;
+    //        }
+    //        response = "no rainbow";
+    //        return false;
+    //    }
+    //}
+    //[CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class SetScale : ICommand, IUsageProvider
     {
         public string Command => "setscale";
@@ -242,7 +244,7 @@ namespace CommandSystem
         {
             if (arguments.Count == 0)
             {
-                response = "";
+                response = "开始播放音乐";
                 return false;
             }
             UtilPlugin.Music.PlayMusic(arguments.At(0), arguments.At(1), int.Parse(arguments.At(2)));
@@ -258,7 +260,7 @@ namespace CommandSystem
 
         public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "";
+        public string Description => "启动 Omega 核弹";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -274,7 +276,7 @@ namespace CommandSystem
 
         public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "";
+        public string Description => "停止 Omaga 核弹";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -291,7 +293,7 @@ namespace CommandSystem
 
         public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "";
+        public string Description => "停止播放音乐";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -398,150 +400,154 @@ namespace CommandSystem
             return true;
         }
     }
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class ReloadBadge : ICommand
-    {
-        public string Command => "reloadbadge";
+//    [CommandHandler(typeof(ClientCommandHandler))]
+//    [CommandHandler(typeof(RemoteAdminCommandHandler))]
+//    public class ReloadBadge : ICommand
+//    {
+//        public string Command => "reloadbadge";
 
-        public string[] Aliases => Array.Empty<string>();
+//        public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "";
+//        public string Description => "重新加载";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            if (arguments.Count == 0) BadgeDatabase.Update(); // 用于临时连接至另一台MySQL服务器，调试版
-            else BadgeDatabase.Update(arguments.At(0));
-            response = "Done!";
-            return true;
-        }
-    }
-    [CommandHandler(typeof(ClientCommandHandler))]
-    public class Callkick : ICommand
-    {
-        public string Command => "callkick";
+//        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+//        {
+//            if (arguments.Count == 0) BadgeDatabase.Update(); // 用于临时连接至另一台MySQL服务器，调试版
+//            else BadgeDatabase.Update(arguments.At(0));
+//            response = "Done!";
+//            return true;
+//        }
+//    }
+//    [CommandHandler(typeof(ClientCommandHandler))]
+//    public class Callkick : ICommand
+//    {
+//        public string Command => "callkick";
 
-        public string[] Aliases => Array.Empty<string>();
+//        public string[] Aliases => Array.Empty<string>();
 
-        public string Description => "投票踢人，用法：.callkick [id]";
+//        public string Description => "投票踢人，用法：.callkick [id]";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            if (arguments.Count == 0)
-            {
-                response = "";
-                foreach (Player player in Player.List)
-                {
-                    response += $"{player.DisplayNickname}({player.Id})\n";
-                }
-                return false;
-            }
-            else
-            {
-                Player origin = Player.Get((sender as CommandSender).SenderId);
-                Player target = Player.Get(int.Parse(arguments.At(0)));
-                if (target == null)
-                {
-                    response = "不存在该玩家";
-                    return false;
-                }
-                if (Check())
-                {
-                    response = "当前服务器内有管理员！请联系管理员";
-                    return false;
-                }
-                if (!Voting.Canvote)
-                {
-                    response = "当前不可发起投票";
-                    return false;
-                }
-                Voting.Canvote = false;
-                Voting.voting = true;
-                Voting.AcceptPlayer.Add(origin.UserId);
-                Voting.votingcoroutine = Timing.RunCoroutine(Voting.SendBroadcast(new VotingEvent
-                {
-                    VotingDes = $"踢出{target.DisplayNickname}",
-                    AcceptBroadcast = $"正在踢出{target.DisplayNickname}",
-                    Action = () => { target.Ban(120, "你已被投票踢出"); },
-                    OnVotingEnded = () => { return (double)Voting.AcceptPlayer.Count / Server.PlayerCount >= 0.7; }
-                }, origin));
-                response = "Done!";
-                return true;
-            }
-        }
-        public static bool Check()
-        {
-            foreach (Player player in Player.List)
-            {
-                if (player.Group != null && (player.Group.Permissions & (ulong)(PlayerPermissions.KickingAndShortTermBanning | PlayerPermissions.BanningUpToDay | PlayerPermissions.LongTermBanning)) != 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-    [CommandHandler(typeof(ClientCommandHandler))]
-    public class Chat : ICommand
-    {
-        public string Command => "chat";
+//        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+//        {
+//            if (arguments.Count == 0)
+//            {
+//                response = "";
+//                foreach (Player player in Player.List)
+//                {
+//                    response += $"{player.DisplayNickname}({player.Id})\n";
+//                }
+//                return false;
+//            }
+//            else
+//            {
+//                Player origin = Player.Get((sender as CommandSender).SenderId);
+//                Player target = Player.Get(int.Parse(arguments.At(0)));
+//                if (target == null)
+//                {
+//                    response = "不存在该玩家";
+//                    return false;
+//                }
+//                if (Check())
+//                {
+//                    response = "当前服务器内有管理员！请联系管理员";
+//                    return false;
+//                }
+//                if (!Voting.Canvote)
+//                {
+//                    response = "当前不可发起投票";
+//                    return false;
+//                }
+//                Voting.Canvote = false;
+//                Voting.voting = true;
+//                Voting.AcceptPlayer.Add(origin.UserId);
+//                Voting.votingcoroutine = Timing.RunCoroutine(Voting.SendBroadcast(new VotingEvent
+//                {
+//                    VotingDes = $"踢出{target.DisplayNickname}",
+//                    AcceptBroadcast = $"正在踢出{target.DisplayNickname}",
+//                    Action = () => { target.Ban(120, "你已被投票踢出"); },
+//                    OnVotingEnded = () => { return (double)Voting.AcceptPlayer.Count / Server.PlayerCount >= 0.7; }
+//                }, origin));
+//                response = "Done!";
+//                return true;
+//            }
+//        }
+//        public static bool Check()
+//        {
+//            foreach (Player player in Player.List)
+//            {
+//                if (player.Group != null && (player.Group.Permissions & (ulong)(PlayerPermissions.KickingAndShortTermBanning | PlayerPermissions.BanningUpToDay | PlayerPermissions.LongTermBanning)) != 0)
+//                {
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }
+//    }
+//    [CommandHandler(typeof(ClientCommandHandler))]
+//    public class Chat : ICommand
+//    {
+//        public string Command => "chat";
 
-        public string[] Aliases => new string[] { "c" };
+//        public string[] Aliases => new string[] { "c" };
 
-        public string Description => "阵营聊天";
+//        public string Description => "阵营聊天";
 
-        public static bool Spectator(RoleTypeId id) => id == RoleTypeId.Spectator;
+//        public static bool Spectator(RoleTypeId id) => id == RoleTypeId.Spectator;
 
-        public static bool MTF(RoleTypeId id) => id == RoleTypeId.NtfSpecialist || id == RoleTypeId.NtfPrivate || id == RoleTypeId.NtfCaptain || id == RoleTypeId.NtfSergeant || id == RoleTypeId.FacilityGuard;
+//        public static bool MTF(RoleTypeId id) => id == RoleTypeId.NtfSpecialist || id == RoleTypeId.NtfPrivate || id == RoleTypeId.NtfCaptain || id == RoleTypeId.NtfSergeant || id == RoleTypeId.FacilityGuard;
 
-        public static bool Chaos(RoleTypeId id) => id == RoleTypeId.ChaosConscript || id == RoleTypeId.ChaosRifleman || id == RoleTypeId.ChaosMarauder || id == RoleTypeId.ChaosRepressor;
+//        public static bool Chaos(RoleTypeId id) => id == RoleTypeId.ChaosConscript || id == RoleTypeId.ChaosRifleman || id == RoleTypeId.ChaosMarauder || id == RoleTypeId.ChaosRepressor;
 
-        public static bool Lights(RoleTypeId id) => id == RoleTypeId.ClassD || id == RoleTypeId.Scientist;
+//        public static bool Lights(RoleTypeId id) => id == RoleTypeId.ClassD || id == RoleTypeId.Scientist;
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            Player player = sender as Player;
-            BroadcastItem item = new BroadcastItem { prefix = "阵营聊天", priority = (byte)BroadcastPriority.Normal, text = $"[{player.DisplayNickname}:{arguments.At(0).Replace('|', ' ')}]", time = 10, showtime = true};
-            switch (player.Role.Team)
-            {
-                case Team.FoundationForces:
-                    item.Check += MTF;
-                    item.text = $"<color=cyan>{item.text}</color>";
-                    break;
-                case Team.ChaosInsurgency:
-                    item.Check += Chaos;
-                    item.text = $"<color=green>{item.text}</color>";
-                    break;
-                case Team.Scientists:
-                case Team.ClassD:
-                    item.Check += Lights;
-                    item.text = $"<color=yellow>{item.text}</color>";
-                    break;
-                case Team.Dead:
-                    item.Check += Spectator;
-                    break;
-            }
-            BroadcastMain.SendNormalCast(item);
-            response = "Done!";
-            return true;
-        }
-    }
-    [CommandHandler(typeof(ClientCommandHandler))]
-    public class Bchat : ICommand
-    {
-        public string Command => "globalchat";
+//        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+//        {
+//            Player player = sender as Player;
+//            if (player == null)
+//            {
+//                response = "Player is Null";
+//            }
+//            BroadcastItem item = new BroadcastItem { prefix = "阵营聊天", priority = (byte)BroadcastPriority.Normal, text = $"[{player.DisplayNickname}:{arguments.At(0).Replace('|', ' ')}]", time = 10, showtime = true };
+//            switch (player.Role.Team)
+//            {
+//                case Team.FoundationForces:
+//                    item.Check += MTF;
+//                    item.text = $"<color=cyan>{item.text}</color>";
+//                    break;
+//                case Team.ChaosInsurgency:
+//                    item.Check += Chaos;
+//                    item.text = $"<color=green>{item.text}</color>";
+//                    break;
+//                case Team.Scientists:
+//                case Team.ClassD:
+//                    item.Check += Lights;
+//                    item.text = $"<color=yellow>{item.text}</color>";
+//                    break;
+//                case Team.Dead:
+//                    item.Check += Spectator;
+//                    break;
+//            }
+//            BroadcastMain.SendNormalCast(item);
+//            response = "Done!";
+//            return true;
+//        }
+//    }
+//    [CommandHandler(typeof(ClientCommandHandler))]
+//    public class Bchat : ICommand
+//    {
+//        public string Command => "globalchat";
 
-        public string[] Aliases => new string[] { "bc" };
+//        public string[] Aliases => new string[] { "bc" };
 
-        public string Description => "全部聊天";
+//        public string Description => "全部聊天";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            Player player = sender as Player;
-            BroadcastItem item = new BroadcastItem { prefix = "全局聊天", priority = (byte)BroadcastPriority.Normal, text = $"[{player.DisplayNickname}:{arguments.At(0).Replace('|', ' ')}]", time = 10, showtime = true };
-            BroadcastMain.SendGlobalcast(item);
-            response = "Done!";
-            return true;
-        }
-    }
+//        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+//        {
+//            Player player = sender as Player;
+//            BroadcastItem item = new BroadcastItem { prefix = "全局聊天", priority = (byte)BroadcastPriority.Normal, text = $"[{player.DisplayNickname}:{arguments.At(0).Replace('|', ' ')}]", time = 10, showtime = true };
+//            BroadcastMain.SendGlobalcast(item);
+//            response = "Done!";
+//            return true;
+//        }
+//    }
 }

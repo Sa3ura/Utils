@@ -16,6 +16,7 @@ using Exiled.Events.EventArgs.Map;
 using Exiled.API.Features.Doors;
 using Exiled.API.Interfaces;
 using UnityEngine;
+using Exiled.API.Features.Items;
 
 namespace UtilPlugin
 {
@@ -40,12 +41,12 @@ namespace UtilPlugin
             if (UtilPlugin.Instance.Config.MysqlEnabled)
             {
                 Exiled.Events.Handlers.Server.RestartingRound += OnRoundRestart;
-                Exiled.Events.Handlers.Player.Joined += OnPlayerJoined;
+                Exiled.Events.Handlers.Player.Verified+= OnPlayerVerified;
             }
             else
             {
                 Exiled.Events.Handlers.Server.RestartingRound -= OnRoundRestart;
-                Exiled.Events.Handlers.Player.Joined -= OnPlayerJoined;
+                Exiled.Events.Handlers.Player.Verified -= OnPlayerVerified;
             }
             if (value)
             {
@@ -177,10 +178,10 @@ namespace UtilPlugin
             Badge badge = BadgeDatabase.GetBadge(player.UserId);
             if (badge == null || badge.text == "none")
             {
-                Log.Info($"Player {player.Nickname}({player.UserId}) has no badge");
+                Log.Info($"玩家 {player.Nickname}({player.UserId}) 没有一个称号");
                 return;
             }
-            Log.Info($"Player {player.Nickname}({player.UserId}) has a badge {badge}");
+            Log.Info($"玩家 {player.Nickname}({player.UserId}) 拥有一个称号： {badge}");
             if (!string.Equals(badge.adminrank, "player", StringComparison.CurrentCultureIgnoreCase))
             {
                 player.SetRank(Exiled.API.Extensions.UserGroupExtensions.GetValue(badge.adminrank).BadgeText, Exiled.API.Extensions.UserGroupExtensions.GetValue(badge.adminrank));
@@ -205,9 +206,10 @@ namespace UtilPlugin
                 }
             }
         }
-        public static void OnPlayerJoined(JoinedEventArgs ev)
+        public static void OnPlayerVerified(VerifiedEventArgs ev)
         {
-            Timing.CallDelayed(10, ev.Player.SetBadge);
+            //Timing.CallDelayed(3, ev.Player.SetBadge);
+            ev.Player.SetBadge();
         }
         public static void OnRoundRestart()
         {
@@ -276,10 +278,12 @@ namespace UtilPlugin
             while(Flag)
             {
                 yield return Timing.WaitForSeconds(delay - 30);
-                BroadcastMain.SendGlobalcast(new BroadcastItem { time = 10, prefix = "自动扫地机", priority = (byte)BroadcastPriority.Normal, text = "服务器将在20秒后清理地板" });
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { time = 10, prefix = "自动扫地机", priority = (byte)BroadcastPriority.Normal, text = "服务器将在20秒后清理地板" });
+                PluginAPI.Core.Server.SendBroadcast("服务器将在30秒后清理掉落物和尸体", 10);
                 yield return Timing.WaitForSeconds(30);
                 CleanServer(true);
-                BroadcastMain.SendGlobalcast(new BroadcastItem { time = 10, prefix = "自动扫地机", priority = (byte)BroadcastPriority.Normal, text = $"清理完成，下次清理将在{UtilPlugin.Instance.Config.Cleanuptime}后进行" });
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { time = 10, prefix = "自动扫地机", priority = (byte)BroadcastPriority.Normal, text = $"清理完成，下次清理将在{UtilPlugin.Instance.Config.Cleanuptime}后进行" });
+                PluginAPI.Core.Server.SendBroadcast($"清理完成，下次清理将在{delay}秒后进行", 10);
             }
         }
 
@@ -288,7 +292,7 @@ namespace UtilPlugin
             foreach (var a in UnityEngine.Object.FindObjectsOfType<ItemPickupBase>())
             {
                 Pickup pickup = Pickup.Get(a);
-                if (!(IsSCPitem(pickup.Type) || pickup.Type == ItemType.GrenadeFlash || pickup.Type == ItemType.Jailbird || pickup.Type == ItemType.GrenadeHE || pickup.Type == ItemType.MicroHID || pickup.Type == ItemType.KeycardO5 || pickup.Type == ItemType.KeycardFacilityManager || pickup.Type == ItemType.ParticleDisruptor))
+                if (!(IsSCPitem(pickup.Type) || pickup.Type == ItemType.GrenadeFlash || pickup.Type == ItemType.Jailbird || pickup.Type == ItemType.GrenadeHE || pickup.Type == ItemType.MicroHID || pickup.Type == ItemType.KeycardO5 || pickup.Type == ItemType.KeycardFacilityManager || pickup.Type == ItemType.ParticleDisruptor || pickup.Type == ItemType.Medkit))
                 {
                     pickup.Destroy();
                 }

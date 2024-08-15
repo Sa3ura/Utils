@@ -90,7 +90,8 @@ namespace UtilPlugin
             Warhead.IsLocked = true;
             if (sendbroadcast)
             {
-                BroadcastMain.SendGlobalcast(new BroadcastItem { prefix = "<color=red>系统核弹</color>", priority = (byte)BroadcastPriority.Higher, text = UtilPlugin.Instance.Config.SystemWarheadBroadcast, time = 10 });
+                //BroadcastMain.SendGlobalcast(new BroadcastItem { Prefix = "<color=red>系统核弹</color>", Priority = (byte)BroadcastPriority.Higher, Text = UtilPlugin.Instance.Config.SystemWarheadBroadcast, Time = 10 });
+                PluginAPI.Core.Server.SendBroadcast($"<color=red>系统核弹</color> {UtilPlugin.Instance.Config.SystemWarheadBroadcast}",10);
             }
         }
     }
